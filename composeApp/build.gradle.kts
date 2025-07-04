@@ -40,10 +40,22 @@ compose.desktop {
     application {
         mainClass = "mahmoud.habib.kmpify.MainKt"
 
+
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "mahmoud.habib.kmpify"
+            packageName = "KMPify"
             packageVersion = "1.0.0"
+            macOS {
+                dockName = "KMPify"
+                iconFile.set(project.file("src/desktopMain/composeResources/drawable/AppIcon.icns"))
+            }
+            windows {
+                iconFile.set(project.file("src/desktopMain/composeResources/drawable/AppIcon.ico"))
+            }
+            linux {
+                iconFile.set(project.file("src/desktopMain/composeResources/drawable/AppIcon.png"))
+            }
         }
+
     }
 }
