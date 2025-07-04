@@ -1,10 +1,14 @@
-This is a Kotlin Multiplatform project targeting Desktop.
+# KMPify
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-    - `commonMain` is for code that’s common for all targets.
-    - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-      For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-      `iosMain` would be the right folder for such calls.
+**KMPify** is a Kotlin-based desktop tool designed to help you **migrate Android Jetpack Compose projects** to **Kotlin Multiplatform (KMP)** with minimal effort.
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+It automatically scans `.kt` files and applies a series of smart transformations to:
+- Replace Android-specific resource imports with their KMP-compatible counterparts
+- Convert `R.drawable`, `R.string`, and `R.font` references to `Res.drawable`, `Res.string`, etc.
+- Rebuild imports cleanly and inject resource references where needed
+- Replace annotations like `@DrawableRes` and `@StringRes` with their KMP alternatives
+- Replace previews, viewModels, and other common Compose elements
+
+Whether you're migrating an entire module or just experimenting with KMP, **KMPify** speeds up the process and reduces manual editing.
+
+---
