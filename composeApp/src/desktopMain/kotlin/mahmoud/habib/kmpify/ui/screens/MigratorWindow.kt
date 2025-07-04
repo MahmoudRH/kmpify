@@ -46,7 +46,7 @@ fun MigratorWindow(
         ) {
             // Title
             Text(
-                text = "Compose Multiplatform Migrator",
+                text = "KMPify - Compose Multiplatform Migrator",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
