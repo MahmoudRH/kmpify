@@ -92,15 +92,14 @@ object MigrationManager {
             // Rebuild file with proper import ordering
             content = rebuildFileWithImports(content, refs, baseResPath, changes)
 
+            //count added imports
+            changes.importsAdded = countAddedImports(content, changes)
+
             val filename = filePath.toString().substringAfterLast('/')
             if (dryRun) {
                 println("$filename -> ${originalContent != content}")
                 return@withContext MigrationFileRow(filename,originalContent != content, changes)
             }
-
-            //count added imports
-            // Extract existing imports
-            changes.importsAdded = countAddedImports(content, changes)
 
             // Write output file
             writeOutputFile(filePath, content, inputPath, outputDir)
