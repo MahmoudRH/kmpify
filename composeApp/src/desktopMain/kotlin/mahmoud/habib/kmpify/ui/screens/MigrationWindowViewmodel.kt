@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mahmoud.habib.kmpify.model.MigrationFileRow
 import mahmoud.habib.kmpify.model.MigrationSummary
-import mahmoud.habib.kmpify.utils.MigrationManager
-import mahmoud.habib.kmpify.utils.sumOf
+import mahmoud.habib.kmpify.core.MigrationManager
+import mahmoud.habib.kmpify.core.sumOf
 
 class MigrationWindowViewmodel : ViewModel() {
 

@@ -1,6 +1,7 @@
 package mahmoud.habib.kmpify.model
 
-import mahmoud.habib.kmpify.utils.KmpImport
+import mahmoud.habib.kmpify.core.KmpImport
+
 
 data class ProcessingChanges(
     var rImport: Int = 0,

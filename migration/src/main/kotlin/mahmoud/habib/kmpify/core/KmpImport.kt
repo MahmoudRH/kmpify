@@ -1,4 +1,4 @@
-package mahmoud.habib.kmpify.utils
+package mahmoud.habib.kmpify.core
 
 enum class KmpImport(val import:String) {
     JETBRAINS_PREVIEW("org.jetbrains.compose.ui.tooling.preview.Preview"),
