@@ -2,8 +2,8 @@ plugins {
     kotlin("jvm")
 }
 
-group = "mahmoud.habib"
-version = "unspecified"
+group = "mahmoud.habib.kmpify"
+version = libs.versions.kmpifyVersion.get()
 
 repositories {
     mavenCentral()

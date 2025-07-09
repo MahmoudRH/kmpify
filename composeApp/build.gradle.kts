@@ -45,7 +45,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "KMPify"
-            packageVersion = "1.0.0"
+            packageVersion = libs.versions.kmpifyVersion.get()
             macOS {
                 dockName = "KMPify"
                 iconFile.set(project.file("src/desktopMain/composeResources/drawable/AppIcon.icns"))
