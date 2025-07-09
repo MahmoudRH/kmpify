@@ -1,4 +1,4 @@
-package mahmoud.habib.kmpify.utils
+package mahmoud.habib.kmpify.core
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -8,8 +8,9 @@ import mahmoud.habib.kmpify.model.ResourceReferences
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import kotlin.collections.iterator
 import kotlin.io.path.*
-
+import kotlin.text.get
 
 object MigrationManager {
     private const val DRAWABLE = "drawable"
@@ -93,22 +94,22 @@ object MigrationManager {
             content = rebuildFileWithImports(content, refs, baseResPath, changes)
 
             //count added imports
-            changes.importsAdded = countAddedImports(content, changes)
+            changes.importsAdded = countAddedImports(content)
 
             val filename = filePath.toString().substringAfterLast('/')
             if (dryRun) {
                 println("$filename -> ${originalContent != content}")
-                return@withContext MigrationFileRow(filename,originalContent != content, changes)
+                return@withContext MigrationFileRow(filename, originalContent != content, changes)
             }
 
             // Write output file
             writeOutputFile(filePath, content, inputPath, outputDir)
 
-            return@withContext MigrationFileRow(filename,originalContent != content, changes)
+            return@withContext MigrationFileRow(filename, originalContent != content, changes)
         }
     }
 
-    private fun countAddedImports(content: String, changes: ProcessingChanges): MutableSet<KmpImport> {
+    private fun countAddedImports(content: String): MutableSet<KmpImport> {
         val importPattern = Regex("""^import\s+([\w.]+)""", RegexOption.MULTILINE)
         val existingImports = importPattern.findAll(content).map { it.groups[1]?.value ?: "" }.toSet()
 

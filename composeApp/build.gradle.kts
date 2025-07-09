@@ -24,6 +24,7 @@ kotlin {
             implementation(libs.compose.material.icons.extended)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            api(project(":migration"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
