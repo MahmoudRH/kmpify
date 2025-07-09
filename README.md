@@ -97,7 +97,7 @@ We welcome contributions to make KMPify better!
 
 ## Contact
 
-- **Email**: Reach out to [mhmoudrhabib@gmail.com](mailto:mhmoudrhabib@gmail.com) (replace with your actual email).
+- **Email**: Reach out to [mhmoudrhabib@gmail.com](mailto:mhmoudrhabib@gmail.com).
 - **Follow**: Stay updated on [LinkedIn](https://www.linkedin.com/in/mahmoudhabib/).
 
 Star ⭐ this repository to support the project!
