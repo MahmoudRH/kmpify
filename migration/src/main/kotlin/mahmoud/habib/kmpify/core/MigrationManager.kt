@@ -17,7 +17,7 @@ object MigrationManager {
     private const val STRING = "string"
     private const val FONT = "font"
 
-    suspend fun findKtFiles(inputPath: String, logTo: Path? = null): List<Path> {
+    suspend fun findKtFiles(inputPath: String): List<Path> {
         return withContext(Dispatchers.IO) {
 
             val path = Paths.get(inputPath)
@@ -31,9 +31,6 @@ object MigrationManager {
             }
 
             if (ktFiles.isEmpty()) {
-                val msg = "❌ No Kotlin files found."
-                println("\u001B[31m$msg") // ANSI red
-                logTo?.toFile()?.writeText(msg)
                 return@withContext emptyList()
             }
 
@@ -96,9 +93,8 @@ object MigrationManager {
             //count added imports
             changes.importsAdded = countAddedImports(content)
 
-            val filename = filePath.toString().substringAfterLast('/')
+            val filename = filePath.pathString
             if (dryRun) {
-                println("$filename -> ${originalContent != content}")
                 return@withContext MigrationFileRow(filename, originalContent != content, changes)
             }
 

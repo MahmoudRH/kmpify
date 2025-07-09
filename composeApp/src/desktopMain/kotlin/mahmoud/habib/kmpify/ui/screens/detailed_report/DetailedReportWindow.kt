@@ -71,7 +71,7 @@ fun DetailedReportWindow(
                                     .weight(if (i == 0) 1.25f else if (i == 6) 1.75f else 0.75f)
                                     .clickable {
                                             when (title) {
-                                                "File Name" -> { data.sortBy { it.fileName } }
+                                                "File Name" -> { data.sortBy { it.filePath.substringAfterLast('/') } }
                                                 "Changed" -> { data.sortByDescending { it.hasChanged } }
                                                 "R Import" -> { data.sortByDescending { it.changes.rImport } }
                                                 "Res Imports" -> { data.sortByDescending { it.changes.resourceImports } }
@@ -118,7 +118,7 @@ fun DetailedReportWindow(
 private fun ReportRow(index: Int, row: MigrationFileRow, modifier: Modifier = Modifier, isExpanded: Boolean) {
     Row(modifier.animateContentSize(), verticalAlignment = Alignment.CenterVertically) {
         RowCell(text = index.toString(), weight = .25f)
-        RowCell(text = row.fileName, weight = 1.25f)
+        RowCell(text = row.filePath.substringAfterLast('/'), weight = 1.25f)
         RowCell(text = row.hasChanged.toText())
         RowCell(text = row.changes.rImport.takeIf { it > 0 }?.let { "Replaced" } ?: "-")
         RowCell(text = row.changes.resourceImports.toString())
