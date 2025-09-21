@@ -16,6 +16,7 @@ import mahmoud.habib.kmpify.model.MigrationFileRow
 import mahmoud.habib.kmpify.model.MigrationSummary
 import mahmoud.habib.kmpify.utils.printAsTree
 import mahmoud.habib.kmpify.utils.printMigrationSummary
+import mahmoud.habib.mahmoud.habib.kmpify.model.MigrationConfigs
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.Path
@@ -24,7 +25,7 @@ import kotlin.io.path.isDirectory
 import kotlin.io.path.pathString
 import kotlin.system.exitProcess
 
-class KMPifyCli : SuspendingCliktCommand() {
+class KMPifyCli : SuspendingCliktCommand("kmpify") {
 
 
     private companion object {
@@ -246,12 +247,14 @@ class KMPifyCli : SuspendingCliktCommand() {
         ktFiles.map { path ->
             MigrationManager.processFile(
                 filePath = path,
-                kmpProject = projectName,
-                sharedModule = sharedModuleName,
-                inputPath = inputDirectory,
-                customPreview = customPreview.ifEmpty { null },
-                outputDir = outputDirectory.ifEmpty { null },
-                dryRun = isDryRun,
+                configs = MigrationConfigs(
+                    kmpProject = projectName,
+                    sharedModule = sharedModuleName,
+                    inputPath = inputDirectory,
+                    customPreview = customPreview.ifEmpty { null },
+                    outputDir = outputDirectory.ifEmpty { null },
+                    dryRun = isDryRun,
+                )
             )
         }.let { list ->
             list to MigrationSummary(
