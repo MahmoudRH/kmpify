@@ -61,7 +61,7 @@ object MigrationManager {
                 // Replace resource imports
                 content = replaceResourceImports(content)
 
-                content = replacePreviewImport(content)
+                content = replacePreviewImports(content)
                 // Replace custom preview imports
                 if (customPreview?.isNotBlank() == true) {
                     content = replaceCustomPreview(content, customPreview)
@@ -160,11 +160,18 @@ object MigrationManager {
     /**
      * Replace preview imports
      */
-    private fun replacePreviewImport(content: String): String {
-        return content.replaceWord(
-            "androidx.compose.ui.tooling.preview.Preview",
-            KmpImport.JETBRAINS_PREVIEW.import
-        )
+    private fun replacePreviewImports(content: String): String {
+        return content
+            .replaceWord(
+                "androidx.compose.ui.tooling.preview.Preview",
+                KmpImport.JETBRAINS_PREVIEW.import
+            ).replaceWord(
+                "androidx.compose.ui.tooling.preview.PreviewParameter",
+                KmpImport.JETBRAINS_PREVIEW_PARAMETER.import,
+            ).replaceWord(
+                "androidx.compose.ui.tooling.preview.PreviewParameterProvider",
+                KmpImport.JETBRAINS_PREVIEW_PARAMETER_PROVIDER.import,
+            )
     }
 
     /**
