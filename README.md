@@ -1,8 +1,12 @@
 # KMPify
 
-**KMPify** is a Kotlin-based desktop tool designed to help you **migrate Android Jetpack Compose projects** to **Kotlin Multiplatform (KMP)** with minimal effort.
+**KMPify** is a Kotlin tool that helps **migrate Android Jetpack Compose projects** to **Kotlin Multiplatform (KMP)** with minimal effort. Available as both a **CLI tool** and **Desktop GUI**.
+![KMPify in Action](docs/screenshots/main_window.png)
 
-It automatically scans `.kt` files and applies a series of smart transformations to:
+## Why Use KMPify?
+
+Migrating to Kotlin Multiplatform allows you to share code across multiple platforms. KMPify automates the repetitive tasks, It automatically scans `.kt` files and applies a series of smart transformations to:
+
 - Replace Android-specific resource imports with their KMP-compatible counterparts
 - Convert `R.drawable`, `R.string`, and `R.font` references to `Res.drawable`, `Res.string`, etc.
 - Rebuild imports cleanly and inject resource references where needed
@@ -10,40 +14,10 @@ It automatically scans `.kt` files and applies a series of smart transformations
 - Replace previews, viewModels, and other common Compose elements
 
 for more about migration steps see [MigrationSteps](docs/MigrationGuide.md)
-## Why Use KMPify?
-
-Migrating to Kotlin Multiplatform allows you to share code across multiple platforms, reducing development time and maintenance costs. KMPify simplifies this process by automating repetitive tasks, ensuring your Jetpack Compose project is KMP-ready with minimal effort.
 
 ---
-
-## Features
-
-- **Flexible Processing**: Supports single `.kt` files or entire directories with recursive processing.
-- **Dry Run Mode**: Preview changes without modifying files.
-- **User-Friendly UI**: Simple Compose Desktop interface for inputting paths and configuration.
-- **Reports**: Once you run the migration you will get a _MigrationSummary_ and a _MigrationReport_ with all the files and what has changed
-___
-
-## Usage
-
-Once you launch **KMPify**, you’ll be greeted with a simple UI:
-
-![KMPify Main Window](docs/screenshots/main_window.png)
-
-### Input Fields
-
-- **Input Path**: The directory containing your Android `.kt` files, Typically your `main/java/` folder.
-- **Output Path**: The directory where the migrated files will be saved. Usually points to your KMP `commonMain/kotlin/` directory.
-- **KMP Project Name**: The name of your multiplatform project (used to build resource paths).
-- **Shared Module Name**: The name of your shared module. Defaults to `composeapp` if left empty.
-- **Custom Preview** (Optional): If you're using a custom `@Preview` annotation, you can specify it here.
-
-- **Dry Run**: When checked, KMPify will simulate the migration and show what would be changed, but it won’t overwrite any files.
-
----
-
 ### Example
-**Input File** (`MainScreen.kt`):
+**Before** (Android):
 ```kotlin
 import com.example.android.R
 import androidx.compose.ui.res.painterResource
@@ -56,7 +30,7 @@ fun MainScreen() {
 }
 ```
 
-**Output File**:
+**After** (KMP):
 ```kotlin
 import my_kmp_project.composeapp.generated.resources.Res
 import my_kmp_project.composeapp.generated.resources.icon
@@ -71,6 +45,69 @@ fun MainScreen() {
 }
 ```
 
+## Features
+
+- **Dual Interface**: Use the CLI for quick, scriptable migrations or the Compose Desktop UI for an interactive experience.
+- **Flexible Processing**: Supports single `.kt` files or entire directories with recursive processing.
+- **Dry Run Mode**: Preview changes without modifying files.
+- **User-Friendly UI**: Simple desktop interface for inputting paths and configuration (optional).
+- **Reports**: Generates a `MigrationSummary` and `MigrationReport` detailing processed files and changes.
+
+
+## Usage
+
+```bash
+Usage: kmpify [<options>]
+
+Options:
+  -i, --input=<path>    The directory containing your Android .kt files, typically your main/java/ folder.
+  -o, --output=<path>   The directory where the migrated files will be saved. Usually points to your KMP commonMain/kotlin/ directory.
+  -p, --project=<text>  The name of your multiplatform project (used to build resource paths).
+  -s, --shared=<text>   The name of your shared module. Defaults to 'composeapp' if left empty.
+  --preview=<text>      If you're using a custom @Preview annotation, you can specify it here.
+  -d, --dry-run         If true, KMPify will simulate the migration and show what would be changed, but won't overwrite any files.
+  -h, --help            Show this message and exit
+```
+---
+
+## Installation
+
+### For macOS Users
+
+Download the latest release from the [Releases page](https://github.com/MahmoudRH/kmpify/releases):
+
+1. GUI Version (Desktop App):
+    - Download `KMPify-1.1.0.dmg`
+    - Double-click to mount and drag KMPify to your Applications folder
+
+2. CLI Version (Terminal):
+    - Download `kmpify-cli-macOs.zip`
+    - Unzip the downloaded file
+      ```bash
+      #Unzip
+        unzip kmpify-cli-macOs.zip
+
+      # Make executable
+        chmod +x kmpify
+        
+      # Run 
+        ./kmpify --help
+      ```
+  
+### For Other Platforms (Linux/Windows)
+1. GUI Version (Desktop App):
+
+    ```bash
+    # Clone the repository
+    git clone https://github.com/MahmoudRH/kmpify.git
+    cd kmpify
+    
+    # Run Desktop GUI
+    ./gradlew :composeApp:run
+    ```
+ 2. CLI Version (Terminal):
+    - clone the repo
+    - go to the cli module and run `Main.kt`
 ---
 ## 📸 Screenshots
 ![KMPify Migration Summary](docs/screenshots/migration_summary.png)
@@ -82,7 +119,7 @@ fun MainScreen() {
 ## Roadmap
 
 - [x] Support for custom `@Preview` annotations.
-- [ ] Command-line interface as an alternative to the GUI.
+- [x] Command-line interface as an alternative to the GUI.
 - [ ] Hilt to Koin migration option
 
 ---
@@ -97,10 +134,10 @@ We welcome contributions to make KMPify better!
 
 ## Contact
 
-- **Email**: Reach out to [mhmoudrhabib@gmail.com](mailto:mhmoudrhabib@gmail.com) (replace with your actual email).
+- **Email**: Reach out to [mhmoudrhabib@gmail.com](mailto:mhmoudrhabib@gmail.com).
 - **Follow**: Stay updated on [LinkedIn](https://www.linkedin.com/in/mahmoudhabib/).
 
-Star ⭐ this repository to support the project!
+Star ⭐ this repository to support the project
 
 ---
 ## License
