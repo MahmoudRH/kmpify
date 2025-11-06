@@ -31,6 +31,7 @@ fun MigratorWindow(
     val sharedModuleName by viewmodel.sharedModuleName.collectAsState()
     val customPreview by viewmodel.customPreview.collectAsState()
     val isDryRun by viewmodel.isDryRun.collectAsState()
+    val removePreviewParameters by viewmodel.removePreviewParameters.collectAsState()
     val report by viewmodel.report.collectAsState()
     var openReportWindow by remember { mutableStateOf(false) }
     Surface(
@@ -107,6 +108,20 @@ fun MigratorWindow(
                     value = customPreview,
                     onValueChange = { viewmodel.updateCustomPreview(it) },
                     supportingText = "(if any)"
+                )
+            }
+
+            Text("More Configs")
+            HorizontalDivider()
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Switch(
+                    checked = removePreviewParameters,
+                    onCheckedChange = { viewmodel.toggleRemovePreviewParameters(it) })
+                Text(
+                    text = "Remove @Preview Parameters?",
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp,
+                    fontFamily = FontFamily.Monospace
                 )
             }
 

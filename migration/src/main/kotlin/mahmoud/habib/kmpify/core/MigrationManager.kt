@@ -5,6 +5,7 @@ import kotlinx.coroutines.withContext
 import mahmoud.habib.kmpify.model.MigrationFileRow
 import mahmoud.habib.kmpify.model.ProcessingChanges
 import mahmoud.habib.kmpify.model.ResourceReferences
+import mahmoud.habib.mahmoud.habib.kmpify.model.MigrationConfigs
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -44,64 +45,61 @@ object MigrationManager {
      */
     suspend fun processFile(
         filePath: Path,
-        kmpProject: String,
-        sharedModule: String,
-        inputPath: String,
-        customPreview: String? = null,
-        dryRun: Boolean = false,
-        outputDir: String? = null
+        configs: MigrationConfigs,
     ): MigrationFileRow {
         return withContext(Dispatchers.Default) {
+            with(configs) {
+                val changes = ProcessingChanges()
+                val originalContent = filePath.readText()
+                var content = originalContent
 
-            val changes = ProcessingChanges()
-            val originalContent = filePath.readText()
-            var content = originalContent
+                val baseResPath = "$kmpProject.$sharedModule.generated.resources"
 
-            val baseResPath = "$kmpProject.$sharedModule.generated.resources"
+                // Replace R class imports
+                content = replaceRClassImports(content, baseResPath, changes)
 
-            // Replace R class imports
-            content = replaceRClassImports(content, baseResPath, changes)
+                // Replace resource imports
+                content = replaceResourceImports(content)
 
-            // Replace resource imports
-            content = replaceResourceImports(content)
+                content = replacePreviewImport(content)
+                // Replace custom preview imports
+                if (customPreview?.isNotBlank() == true) {
+                    content = replaceCustomPreview(content, customPreview)
+                }
 
-            content = replacePreviewImport(content)
-            // Replace custom preview imports
-            if (customPreview?.isNotBlank() == true) {
-                content = replaceCustomPreview(content, customPreview)
-            }
+                content = replaceKoinViewmodelImport(content)
 
-            content = replaceKoinViewmodelImport(content)
+                // Replace preview annotations
+                if (removePreviewParameters)
+                    content = replacePreviewAnnotations(content)
 
-            // Replace preview annotations
-            content = replacePreviewAnnotations(content)
+                // Replace annotation parameters
+                content = replaceAnnotationParameters(content)
 
-            // Replace annotation parameters
-            content = replaceAnnotationParameters(content)
+                // Process resource references
+                val resourceRefs = findAndReplaceResourceReferences(content, changes)
+                content = resourceRefs.first
+                val refs = resourceRefs.second
 
-            // Process resource references
-            val resourceRefs = findAndReplaceResourceReferences(content, changes)
-            content = resourceRefs.first
-            val refs = resourceRefs.second
+                // Replace id with resource in compose functions
+                content = replaceIdWithResource(content)
 
-            // Replace id with resource in compose functions
-            content = replaceIdWithResource(content)
+                // Rebuild file with proper import ordering
+                content = rebuildFileWithImports(content, refs, baseResPath, changes)
 
-            // Rebuild file with proper import ordering
-            content = rebuildFileWithImports(content, refs, baseResPath, changes)
+                //count added imports
+                changes.importsAdded = countAddedImports(content)
 
-            //count added imports
-            changes.importsAdded = countAddedImports(content)
+                val filename = filePath.pathString
+                if (dryRun) {
+                    return@withContext MigrationFileRow(filename, originalContent != content, changes)
+                }
 
-            val filename = filePath.pathString
-            if (dryRun) {
+                // Write output file
+                writeOutputFile(filePath, content, inputPath, outputDir)
+
                 return@withContext MigrationFileRow(filename, originalContent != content, changes)
             }
-
-            // Write output file
-            writeOutputFile(filePath, content, inputPath, outputDir)
-
-            return@withContext MigrationFileRow(filename, originalContent != content, changes)
         }
     }
 

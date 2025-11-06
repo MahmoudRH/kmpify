@@ -11,6 +11,7 @@ import mahmoud.habib.kmpify.model.MigrationFileRow
 import mahmoud.habib.kmpify.model.MigrationSummary
 import mahmoud.habib.kmpify.core.MigrationManager
 import mahmoud.habib.kmpify.core.sumOf
+import mahmoud.habib.mahmoud.habib.kmpify.model.MigrationConfigs
 
 class MigrationWindowViewmodel : ViewModel() {
 
@@ -29,6 +30,9 @@ class MigrationWindowViewmodel : ViewModel() {
 
     private val _customPreview = MutableStateFlow("")
     val customPreview: StateFlow<String> = _customPreview.asStateFlow()
+
+    private val _removePreviewParameters = MutableStateFlow(false)
+    val removePreviewParameters: StateFlow<Boolean> = _removePreviewParameters.asStateFlow()
 
     private val _isDryRun = MutableStateFlow(false)
     val isDryRun: StateFlow<Boolean> = _isDryRun.asStateFlow()
@@ -63,6 +67,10 @@ class MigrationWindowViewmodel : ViewModel() {
         _customPreview.update { preview }
     }
 
+    fun toggleRemovePreviewParameters(checked: Boolean) {
+        _removePreviewParameters.update { checked }
+    }
+
     fun toggleDryRun(checked: Boolean) {
         _isDryRun.update { checked }
     }
@@ -74,6 +82,7 @@ class MigrationWindowViewmodel : ViewModel() {
                 projectName = projectName.value,
                 sharedModuleName = sharedModuleName.value,
                 customPreview = customPreview.value,
+                removePreviewParameters = removePreviewParameters.value,
                 isDryRun = isDryRun.value,
                 outputDirectory = outputDirectory.value
             )
@@ -88,18 +97,22 @@ class MigrationWindowViewmodel : ViewModel() {
         projectName: String,
         sharedModuleName: String,
         customPreview: String,
+        removePreviewParameters: Boolean,
         isDryRun: Boolean,
         outputDirectory: String
     ): Pair<List<MigrationFileRow>,MigrationSummary> = MigrationManager.findKtFiles(inputDirectory)
         .map { path ->
             MigrationManager.processFile(
                 filePath = path,
-                kmpProject = projectName,
-                sharedModule = sharedModuleName.ifEmpty { DEFAULT_SHARED_MODULE_NAME },
-                inputPath = inputDirectory,
-                customPreview = customPreview.ifEmpty { null },
-                outputDir = outputDirectory.ifEmpty { null },
-                dryRun = isDryRun,
+                configs = MigrationConfigs(
+                    kmpProject = projectName,
+                    sharedModule = sharedModuleName.ifEmpty { DEFAULT_SHARED_MODULE_NAME },
+                    inputPath = inputDirectory,
+                    customPreview = customPreview.ifEmpty { null },
+                    outputDir = outputDirectory.ifEmpty { null },
+                    dryRun = isDryRun,
+                    removePreviewParameters = removePreviewParameters
+                )
             )
         }.let { list ->
             list to
